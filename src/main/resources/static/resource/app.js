@@ -30,19 +30,25 @@ function Article__doDeleteReply(el){
 	var $tr = $(el).closest('tr');
 	var id = parseInt($tr.attr('data-id'));
 	
-	$tr.addClass('add-animation-item-now-deleting')
-	$tr.find('.body-view').empty().append('삭제중...');
-	
 	$.post("./doDeleteReply",
 		{
 			id : id
 		},
 		function(data){
-			var effectDelay = Article__ajaxEffectDelay;
 			
-			setTimeout(function() {
-				$tr.remove();				
-			}, effectDelay);
+			alert(data.msg);
+			
+			if ( data.resultCode.substring(0,2) == "S-" ) {
+
+				$tr.addClass('add-animation-item-now-deleting')
+				$tr.find('.body-view').empty().append('삭제중...');
+				
+				var effectDelay = Article__ajaxEffectDelay;
+				
+				setTimeout(function() {
+					$tr.remove();				
+				}, effectDelay);
+			}
 		},
 		"json"
 	);
@@ -160,7 +166,7 @@ function Article__drawReply(reply) {
 	
 	var editableClass = '';
 	
-	if ( 회원번호 == loginedMemberId ) {
+	if ( 회원번호 == loginedMemberId  || 1 == loginedMemberId) {
 		editableClass = 'editable';
 	}
 	

@@ -157,14 +157,12 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		Article article = articleDao.getOne(args);
 
-		long memberId = (long) args.get("loginedMemberId");
-
 		String msg = "";
 		String resultCode = "";
 
 		if (article == null) {
 			rs.put("resultCode", "F-4");
-			rs.put("msg", id + "존재하지 않는 댓글 정보");
+			rs.put("msg", id + "존재하지 않는 글 정보");
 			rs.put("historyBack", true);
 		} else {
 
@@ -195,7 +193,7 @@ public class ArticleServiceImpl implements ArticleService {
 		if (articleReply == null) {
 			msg = "존재하지 않는 댓글 정보";
 			resultCode = "F-4";
-		} else if (articleReply.getMemberId() != memberId) {
+		} else if (articleReply.getMemberId() != memberId && 1 != memberId) {
 			msg = "권한이 없습니다.";
 			resultCode = "F-4";
 		} else {
@@ -203,6 +201,8 @@ public class ArticleServiceImpl implements ArticleService {
 			msg = "삭제했습니다.";
 			resultCode = "S-4";
 		}
+		
+		System.out.println(memberId + ", " +articleReply.getMemberId());
 
 		return Maps.of("msg", msg, "resultCode", resultCode);
 	}

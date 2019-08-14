@@ -196,12 +196,14 @@ public class ArticleController {
 
 		Article article = articleService.getOne(Maps.of("id",id));
 		
-		if ( article.getMemberId() != (long)session.getAttribute("loginedMemberId")) {
-				
-			msg = "권한이 없습니다.";
-			model.addAttribute("alertMsg", msg);
+		long loginedMemberId = (long)session.getAttribute("loginedMemberId");
+		
+		Map<String, Object> checkModifyPermmisionRs = articleService.checkModifyPermmision(id, loginedMemberId);
+
+		if (((String) checkModifyPermmisionRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", ((String) checkModifyPermmisionRs.get("msg")));
 			model.addAttribute("historyBack", true);
-			
+
 			return "common/redirect";
 		}
 				
