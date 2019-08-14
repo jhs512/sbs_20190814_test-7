@@ -25,6 +25,7 @@
 		member
 		WHERE name = #{name}
 		AND email = #{email}
+		AND delStatus = 0
 	</select>
 
 	<select id="searchPw" parameterType="Map" resultMap="Member">
@@ -33,8 +34,8 @@
 		member
 		WHERE name = #{name}
 		AND loginId = #{loginId}
-		AND email =
-		#{email}
+		AND email = #{email}
+		AND delStatus = 0
 	</select>
 
 	<select id="doubleCheck" parameterType="map"

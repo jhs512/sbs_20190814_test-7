@@ -102,10 +102,19 @@ public class MemberServiceImpl implements MemberService {
 
 	public Map<String, Object> searchId(Map<String, Object> param) {
 		Member member = memberDao.searchId(param);
-		System.out.println(member.getLoginId());
 		String msg = null;
 		String resultCode = null;
 		MailHandler mail;
+		
+		if (member == null) {
+			msg = "회원정보를 찾을수 없습니다.";
+			resultCode = "F-3";
+			
+			return Maps.of("msg", msg, "resultCode", resultCode);
+		}
+		
+		System.out.println(member.getLoginId());
+		
 		try {
 			mail = new MailHandler(sender);
 			mail.setFrom(emailSender, emailSenderName);
@@ -128,6 +137,13 @@ public class MemberServiceImpl implements MemberService {
 		String msg = null;
 		String resultCode = null;
 		MailHandler mail;
+		
+		if (member == null) {
+			msg = "회원정보를 찾을수 없습니다.";
+			resultCode = "F-3";
+			
+			return Maps.of("msg", msg, "resultCode", resultCode);
+		}
 		
 		String tempPw = CUtil.getTempKey(5);
 		
