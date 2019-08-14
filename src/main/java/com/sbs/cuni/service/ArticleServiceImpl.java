@@ -128,12 +128,20 @@ public class ArticleServiceImpl implements ArticleService {
 		String msg = "";
 		String resultCode = "";
 
-		articleDao.modifyReply(args);
+		if (articleReply == null) {
+			msg = "존재하지 않는 댓글 정보";
+			resultCode = "F-4";
+		} else if (articleReply.getMemberId() != memberId) {
+			msg = "권한이 없습니다.";
+			resultCode = "F-4";
+		} else {
+			articleDao.modifyReply(args);
 
-		long id = (long) args.get("id");
-
-		resultCode = "S-1";
-		msg = id + "번 댓글이 수정되었습니다.";
+			long id = (long) args.get("id");
+	
+			resultCode = "S-1";
+			msg = id + "번 댓글이 수정되었습니다.";
+		}
 		
 		rs.put("resultCode", resultCode);
 		rs.put("msg", msg);
