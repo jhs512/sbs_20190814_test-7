@@ -38,6 +38,10 @@ public class CUtil {
 	public static String getTempKey() {
 		return new TempKey().getKey();
 	}
+	
+	public static String getTempKey(int length) {
+		return new TempKey(length).getKey();
+	}
 
 }
 
@@ -46,6 +50,10 @@ class TempKey {
 
 	public TempKey() {
 		length = 30;
+	}
+	
+	public TempKey(int length) {
+		this.length = length;
 	}
 
 	public String getKey() {

@@ -128,12 +128,17 @@ public class MemberServiceImpl implements MemberService {
 		String msg = null;
 		String resultCode = null;
 		MailHandler mail;
+		
+		String tempPw = CUtil.getTempKey(5);
+		
+		update(Maps.of("tempPw", tempPw, "id", member.getId()));
+		
 		try {
 			mail = new MailHandler(sender);
 			mail.setFrom(emailSender, emailSenderName);
 			mail.setTo((String) param.get("email"));
 			mail.setSubject("회원님의 비밀번호가 발송되었습니다");
-			mail.setText(new StringBuffer().append("<h1>비밀번호는 " + member.getLoginPw() + " 입니다.</h1>").toString());
+			mail.setText(new StringBuffer().append("<h1>비밀번호는 " + tempPw + " 입니다.</h1>").toString());
 			mail.send();
 			msg = "메일이 발송되었습니다.";
 			resultCode = "S-2";

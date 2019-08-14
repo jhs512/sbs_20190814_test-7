@@ -61,6 +61,7 @@
 		<set>
 			<if test="name != null">name = #{name},</if>
 			<if test="email != null">email = #{email},</if>
+			<if test="tempPw != null">loginPw = #{tempPw},</if>
 		</set>
 		WHERE id = #{id}
 	</update>
