@@ -101,8 +101,19 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/article/doAdd")
-	public String doAdd(Model model, @RequestParam Map<String, Object> param, HttpSession session, long boardId) {
-		param.put("memberId", session.getAttribute("loginedMemberId"));
+	public String doAdd(Model model, @RequestParam Map<String, Object> param, HttpServletRequest request, long boardId) {
+		Member member = (Member)request.getAttribute("loginedMember");
+		
+		if ( boardId == 1 && member.getPermissionLevel() != 1 ) {
+			
+			model.addAttribute("alertMsg", "관리자만 작성할 수 있습니다.");
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+			
+		}
+		
+		param.put("memberId", request.getAttribute("loginedMemberId"));
 		long newId = articleService.add(param);
 
 		String msg = newId + "번 게시물이 추가되었습니다.";
@@ -115,8 +126,7 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/article/modify")
-	public String showModify(@RequestParam(value = "id", defaultValue = "0") int id, long boardId, Model model) {
-
+	public String showModify(@RequestParam(value = "id", defaultValue = "0") int id, long boardId, Model model, HttpServletRequest request) {
 		Board board = articleService.getBoard(boardId);
 
 		model.addAttribute("board", board);
@@ -129,6 +139,18 @@ public class ArticleController {
 		}
 
 		Article article = articleService.getOne(Maps.of("id", id));
+		
+		long loginedMemberId = (long)request.getAttribute("loginedMemberId");
+		
+		Map<String, Object> checkModifyPermmisionRs = articleService.checkModifyPermmision(id, loginedMemberId);
+
+		if (((String) checkModifyPermmisionRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", ((String) checkModifyPermmisionRs.get("msg")));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
+			
 
 		model.addAttribute("article", article);
 
