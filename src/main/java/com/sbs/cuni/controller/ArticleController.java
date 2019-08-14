@@ -170,9 +170,22 @@ public class ArticleController {
 	public String doDelete(Model model, @RequestParam Map<String, Object> param, HttpSession session, long id, long boardId) {
 		param.put("id", id);
 
+		String msg = "";
+
+		Article article = articleService.getOne(Maps.of("id",id));
+		
+		if ( article.getMemberId() != (long)session.getAttribute("loginedMemberId")) {
+				
+			msg = "권한이 없습니다.";
+			model.addAttribute("alertMsg", msg);
+			model.addAttribute("historyBack", true);
+			
+			return "common/redirect";
+		}
+				
 		Map<String, Object> deleteRs = articleService.delete(param);
 
-		String msg = (String) deleteRs.get("msg");
+		msg = (String) deleteRs.get("msg");
 		String resultCode = (String) deleteRs.get("resultCode");
 
 		if (resultCode.startsWith("S-")) {
@@ -213,9 +226,9 @@ public class ArticleController {
 	@RequestMapping("/article/doDeleteReply")
 	@ResponseBody
 	public Map<String, Object> doDeleteReply(Model model, @RequestParam Map<String, Object> param,
-			HttpSession session) {
+			HttpServletRequest request) {
 
-		long loginedId = (long) session.getAttribute("loginedMemberId");
+		long loginedId = (long) request.getAttribute("loginedMemberId");
 		param.put("loginedMemberId", loginedId);
 		Map<String, Object> deleteReplyRs = articleService.deleteReply(param);
 
@@ -231,7 +244,9 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> doModifyReply(Model model, @RequestParam Map<String, Object> param, HttpSession session,
 			HttpServletRequest request, long id) {
-
+		long loginedId = (long) request.getAttribute("loginedMemberId");
+		param.put("loginedMemberId", loginedId);
+		
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

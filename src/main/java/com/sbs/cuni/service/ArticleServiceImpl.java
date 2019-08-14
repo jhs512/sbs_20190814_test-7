@@ -120,13 +120,23 @@ public class ArticleServiceImpl implements ArticleService {
 	public Map<String, Object> updateReply(Map<String, Object> args) {
 
 		Map<String, Object> rs = new HashMap<String, Object>();
+		
+		ArticleReply articleReply = articleDao.getReply(CUtil.getAsLong(args.get("id")));
+
+		long memberId = (long) args.get("loginedMemberId");
+
+		String msg = "";
+		String resultCode = "";
 
 		articleDao.modifyReply(args);
 
 		long id = (long) args.get("id");
 
-		rs.put("resultCode", "S-1");
-		rs.put("msg", id + "번 댓글이 수정되었습니다.");
+		resultCode = "S-1";
+		msg = id + "번 댓글이 수정되었습니다.";
+		
+		rs.put("resultCode", resultCode);
+		rs.put("msg", msg);
 
 		return rs;
 	}
@@ -136,13 +146,27 @@ public class ArticleServiceImpl implements ArticleService {
 		Map<String, Object> rs = new HashMap<String, Object>();
 
 		long id = (long) args.get("id");
+		
+		Article article = articleDao.getOne(args);
 
-		articleDao.delete(id);
+		long memberId = (long) args.get("loginedMemberId");
 
-		articleDao.deleteReplies(id);
+		String msg = "";
+		String resultCode = "";
 
-		rs.put("resultCode", "S-1");
-		rs.put("msg", id + "번 게시물이 삭제되었습니다.");
+		if (article == null) {
+			rs.put("resultCode", "F-4");
+			rs.put("msg", id + "존재하지 않는 댓글 정보");
+			rs.put("historyBack", true);
+		} else {
+
+			articleDao.delete(id);
+	
+			articleDao.deleteReplies(id);
+	
+			rs.put("resultCode", "S-1");
+			rs.put("msg", id + "번 게시물이 삭제되었습니다.");
+		}
 
 		return rs;
 	}
