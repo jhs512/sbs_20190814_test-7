@@ -59,10 +59,10 @@
 				<tr>
 					<td><c:out value="${article.id}" /></td>
 					<td><c:out value="${article.extra.writerName}" /></td>
-					<td><c:out value="${article.regDate}" /></td>
 					<td><a href="detail?id=${article.id}&boardId=${param.boardId}"><c:out
 								value="${article.title}" /></a></td>
 					<td><c:out value="${article.extra.repliesCount}" /></td>
+					<td><c:out value="${article.regDate}" /></td>
 					<td><c:if test="${loginedMemberId == article.memberId || (loginedMember != null && loginedMember.permissionLevel > 0)}">
 							<a onclick="return confirm('정말 삭제하시겠습니까?');" href="/article/doDelete?id=${article.id}&boardId=${param.boardId}">삭제</a>
 						</c:if></td>

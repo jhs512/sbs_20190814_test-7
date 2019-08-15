@@ -55,21 +55,27 @@
 
 	<select id="getReplies" parameterType="map"
 		resultMap="ArticleReply"> 
-		SELECT *
-		FROM articleReply
+		SELECT AR.*
+		, M.name AS extra__writerName
+		FROM articleReply as AR
+		LEFT JOIN member AS M
+		ON AR.memberId = M.id
 		WHERE articleId = #{articleId}
 		<if test="from > 0">
-			AND id >= #{from}
+			AND AR.id >= #{from}
 		</if>
-		ORDER BY id ASC
+		ORDER BY AR.id ASC
 	</select>
 
 
 	<select id="getOne" parameterType="map" resultMap="Article">
-		SELECT *
+		SELECT A.*
+		, M.name as extra__writerName
 		FROM
-		article
-		WHERE id = #{id}
+		article as A
+		LEFT JOIN member as M
+		ON  A.memberId = M.id
+		WHERE A.id = #{id}
 	</select>
 
 	<select id="getBoard" parameterType="long" resultType="Board">
@@ -168,6 +174,7 @@
 		<id property="memberId" column="memberId" />
 		<id property="body" column="body" />
 		<association property="extra" javaType="java.util.HashMap">
+			<result property="writerName" column="extra__writerName" />
 		</association>
 	</resultMap>
 </mapper>

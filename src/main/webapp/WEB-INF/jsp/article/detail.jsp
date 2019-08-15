@@ -61,6 +61,10 @@
 				<td><c:out value="${article.regDate}" /></td>
 			</tr>
 			<tr>
+				<th>작성자</th>
+				<td><c:out value="${article.extra.writerName}" /></td>
+			</tr>
+			<tr>
 				<th>제목</th>
 				<td><c:out value="${article.title}" escapeXml="true" /></td>
 			</tr>
@@ -101,6 +105,7 @@
 	<table>
 		<colgroup>
 			<col width="80">
+			<col width="120">
 			<col width="180">
 			<col>
 			<col width="120">
@@ -109,6 +114,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>작성자</th>
 				<th>등록날짜</th>
 				<th>내용</th>
 				<th>비고</th>
